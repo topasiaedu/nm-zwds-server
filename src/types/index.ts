@@ -54,6 +54,7 @@ export interface EnvironmentConfig {
   readonly PORT: number;
   readonly NODE_ENV: "development" | "production" | "test";
   readonly API_VERSION: string;
+  readonly FRONTEND_URL: string;
   readonly EMAIL: EmailConfig;
 }
 

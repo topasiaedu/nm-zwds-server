@@ -18,8 +18,6 @@ if (envResult.error) {
   console.error("Failed to load .env file:", envResult.error);
 }
 
-
-
 /**
  * Safely converts a string to a number with validation
  * @param {string} value - String value to convert
@@ -67,6 +65,7 @@ function loadEnvironmentConfig(): EnvironmentConfig {
       PORT: parseNumberEnvVar(portValue, "PORT"),
       NODE_ENV: validateNodeEnv(process.env.NODE_ENV),
       API_VERSION: apiVersion.trim(),
+      FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3000",
       EMAIL: {
         from: process.env.EMAIL_FROM || "askcae@topasiaedu.com",
         fromName: process.env.EMAIL_FROM_NAME || "CAE",
@@ -92,6 +91,7 @@ logger.info("Environment configuration loaded", {
   PORT: config.PORT,
   NODE_ENV: config.NODE_ENV,
   API_VERSION: config.API_VERSION,
+  FRONTEND_URL: config.FRONTEND_URL,
   EMAIL: {
     from: config.EMAIL.from,
     fromName: config.EMAIL.fromName,

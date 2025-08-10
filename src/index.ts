@@ -12,8 +12,7 @@ import { config } from "@/config/environment";
 import { logger } from "@/utils/logger";
 import { globalErrorHandler, notFoundHandler } from "@/middleware/errorHandler";
 import { createHealthRouter } from "@/routes/health";
-import lifecycleDecoderRouter from "@/routes/lifecycleDecoder";
-import calculationRouter from "@/routes/calculation";
+import pdfRoutes from "@/routes/pdfRoutes";
 import { ApiResponse, HTTP_STATUS } from "@/types";
 
 /**
@@ -102,11 +101,8 @@ class Server {
     // Health check routes
     this.app.use(`${apiPrefix}/health`, createHealthRouter());
 
-    // Lifecycle decoder routes
-    this.app.use(`${apiPrefix}`, lifecycleDecoderRouter);
-
-    // Calculation routes
-    this.app.use(`${apiPrefix}/calculation`, calculationRouter);
+    // PDF generation routes
+    this.app.use(`${apiPrefix}`, pdfRoutes);
 
     // API info endpoint
     this.app.get(apiPrefix, (_req: Request, res: Response): void => {
@@ -128,14 +124,10 @@ class Server {
             `GET ${apiPrefix}/health`,
             `GET ${apiPrefix}/health/detailed`,
             `POST ${apiPrefix}/lifecycle-decoder`,
-            `POST ${apiPrefix}/lifecycle-decoder/test`,
-            `GET ${apiPrefix}/lifecycle-decoder/info`,
-            `GET ${apiPrefix}/calculation`,
-            `POST ${apiPrefix}/calculation/calculate`,
-            `POST ${apiPrefix}/calculation/lifecycle-decoder`,
-            `POST ${apiPrefix}/calculation/wealth-path-decoder`,
-            `POST ${apiPrefix}/calculation/monthly-report`,
-            `POST ${apiPrefix}/calculation/info`,
+            `POST ${apiPrefix}/wealth-decoder`,
+            `POST ${apiPrefix}/career-timing-window`,
+            `POST ${apiPrefix}/health`,
+            `POST ${apiPrefix}/test`,
           ],
         },
         timestamp: new Date().toISOString(),
