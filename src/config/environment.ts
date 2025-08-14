@@ -72,6 +72,11 @@ function loadEnvironmentConfig(): EnvironmentConfig {
         serviceAccountPath: process.env.GOOGLE_SERVICE_ACCOUNT_PATH || "src/i-monolith-468106-n8-516d38ed8806.json",
         delegateEmail: process.env.EMAIL_DELEGATE || "askcae@topasiaedu.com",
       },
+      SUPABASE: {
+        url: process.env.SUPABASE_URL || "",
+        key: process.env.SUPABASE_KEY || "",
+        bucket: process.env.SUPABASE_BUCKET || "Low Ticket Funnel PDF",
+      },
     };
   } catch (error) {
     logger.error("Failed to load environment configuration", error);

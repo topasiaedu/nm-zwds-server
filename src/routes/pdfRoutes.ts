@@ -12,6 +12,7 @@ import {
   formatValidationErrors 
 } from "@/validators/lifecycleDecoderValidator";
 import { pdfService } from "@/services/pdfService";
+import { uploadPdfToSupabase } from "@/services/storageService";
 // import { emailService } from "@/services/emailService";
 import { logger } from "@/utils/logger";
 import { ApiResponse, HTTP_STATUS, TypedRequest, LifecycleDecoderRequest } from "@/types";
@@ -65,7 +66,7 @@ function savePdfToFolder(buffer: Buffer, filename: string): string {
  */
 router.post("/lifecycle-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ messageId?: string }>>
+  res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
     // Validate request body
@@ -83,8 +84,16 @@ router.post("/lifecycle-decoder", asyncHandler(async (
       config.FRONTEND_URL
     );
 
-    // Save PDF to folder
+    // Save locally for dev visibility
     savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+
+    // Upload to Supabase and return the link
+    const uploaded = await uploadPdfToSupabase({
+      buffer: pdfResult.buffer,
+      filename: pdfResult.filename,
+      category: "lifecycle",
+      userName: validatedData.name,
+    });
 
     // TODO: Uncomment when email service is ready
     // // Send email with PDF attachment
@@ -112,14 +121,14 @@ router.post("/lifecycle-decoder", asyncHandler(async (
     logger.info("Lifecycle decoder request completed successfully", {
       name: validatedData.name,
       email: validatedData.email,
-      // messageId: emailResult.messageId,
       pdfSize: pdfResult.buffer.length,
+      storagePath: uploaded.path,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Lifecycle decoder report has been generated and saved`,
-      data: { messageId: "pdf-generated" },
+      message: `Lifecycle decoder report has been generated and uploaded`,
+      data: { url: uploaded.url },
       timestamp: new Date().toISOString(),
     });
 
@@ -159,7 +168,7 @@ router.post("/lifecycle-decoder", asyncHandler(async (
  */
 router.post("/wealth-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ messageId?: string }>>
+  res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
     // Validate request body
@@ -177,17 +186,16 @@ router.post("/wealth-decoder", asyncHandler(async (
       config.FRONTEND_URL
     );
 
-    // Save PDF to folder
+    // Save locally for dev visibility
     savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
-    // TODO: Uncomment when email service is ready
-    // // Send email with PDF attachment
-    // const emailResult = await emailService.sendLifecycleDecoderPdf(
-    //   validatedData.email,
-    //   validatedData.name,
-    //   pdfResult.buffer,
-    //   pdfResult.filename
-    // );
+    // Upload to Supabase and return the link
+    const uploaded = await uploadPdfToSupabase({
+      buffer: pdfResult.buffer,
+      filename: pdfResult.filename,
+      category: "wealth",
+      userName: validatedData.name,
+    });
 
     // if (!emailResult.success) {
     //   logger.error("Failed to send email", {
@@ -206,14 +214,14 @@ router.post("/wealth-decoder", asyncHandler(async (
     logger.info("Wealth decoder request completed successfully", {
       name: validatedData.name,
       email: validatedData.email,
-      // messageId: emailResult.messageId,
       pdfSize: pdfResult.buffer.length,
+      storagePath: uploaded.path,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Wealth decoder report has been generated and saved`,
-      data: { messageId: "pdf-generated" },
+      message: `Wealth decoder report has been generated and uploaded`,
+      data: { url: uploaded.url },
       timestamp: new Date().toISOString(),
     });
 
@@ -253,7 +261,7 @@ router.post("/wealth-decoder", asyncHandler(async (
  */
 router.post("/career-timing-window", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ messageId?: string }>>
+  res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
     // Validate request body
@@ -271,17 +279,16 @@ router.post("/career-timing-window", asyncHandler(async (
       config.FRONTEND_URL
     );
 
-    // Save PDF to folder
+    // Save locally for dev visibility
     savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
-    // TODO: Uncomment when email service is ready
-    // // Send email with PDF attachment
-    // const emailResult = await emailService.sendLifecycleDecoderPdf(
-    //   validatedData.email,
-    //   validatedData.name,
-    //   pdfResult.buffer,
-    //   pdfResult.filename
-    // );
+    // Upload to Supabase and return the link
+    const uploaded = await uploadPdfToSupabase({
+      buffer: pdfResult.buffer,
+      filename: pdfResult.filename,
+      category: "career",
+      userName: validatedData.name,
+    });
 
     // if (!emailResult.success) {
     //   logger.error("Failed to send email", {
@@ -300,14 +307,14 @@ router.post("/career-timing-window", asyncHandler(async (
     logger.info("Career timing window request completed successfully", {
       name: validatedData.name,
       email: validatedData.email,
-      // messageId: emailResult.messageId,
       pdfSize: pdfResult.buffer.length,
+      storagePath: uploaded.path,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Career timing window report has been generated and saved`,
-      data: { messageId: "pdf-generated" },
+      message: `Career timing window report has been generated and uploaded`,
+      data: { url: uploaded.url },
       timestamp: new Date().toISOString(),
     });
 
@@ -364,7 +371,7 @@ router.post("/health", (_req: Request, res: Response<ApiResponse>): void => {
  */
 router.post("/test", asyncHandler(async (
   req: Request, 
-  res: Response<ApiResponse<{ messageId?: string }>>
+  res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
     const { pdfType = "lifecycle-decoder" } = req.body;
@@ -408,8 +415,17 @@ router.post("/test", asyncHandler(async (
         break;
     }
 
-    // Save PDF to folder
+    // Save locally for dev visibility
     savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+
+    // Map type to category
+    const category = pdfType === "wealth-decoder" ? "wealth" : pdfType === "career-timing-window" ? "career" : "lifecycle";
+    const uploaded = await uploadPdfToSupabase({
+      buffer: pdfResult.buffer,
+      filename: pdfResult.filename,
+      category,
+      userName: testData.name,
+    });
 
     // TODO: Uncomment when email service is ready
     // // Send email with PDF attachment
@@ -435,14 +451,14 @@ router.post("/test", asyncHandler(async (
 
     logger.info("Test PDF request completed successfully", {
       pdfType,
-      // messageId: emailResult.messageId,
       pdfSize: pdfResult.buffer.length,
+      storagePath: uploaded.path,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
-      message: `Test ${pdfType} report has been generated and saved`,
-      data: { messageId: "pdf-generated" },
+      message: `Test ${pdfType} report has been generated and uploaded`,
+      data: { url: uploaded.url },
       timestamp: new Date().toISOString(),
     });
 

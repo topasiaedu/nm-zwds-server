@@ -56,6 +56,11 @@ export interface EnvironmentConfig {
   readonly API_VERSION: string;
   readonly FRONTEND_URL: string;
   readonly EMAIL: EmailConfig;
+  readonly SUPABASE: {
+    readonly url: string;
+    readonly key: string;
+    readonly bucket: string;
+  };
 }
 
 /**

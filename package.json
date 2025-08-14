@@ -31,6 +31,7 @@
     "framer-motion": "^12.23.12",
     "googleapis": "^155.0.0",
     "helmet": "^7.1.0",
+    "@supabase/supabase-js": "^2.45.4",
     "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.1",
     "puppeteer": "^24.16.0",
