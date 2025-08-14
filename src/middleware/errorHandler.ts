@@ -72,7 +72,7 @@ export function globalErrorHandler(
     return;
   }
 
-  let statusCode = HTTP_STATUS.INTERNAL_SERVER_ERROR;
+  let statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR;
   let message = "Internal Server Error";
   let errorDetails = err.message;
 
@@ -126,7 +126,7 @@ export function globalErrorHandler(
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next function
  */
-export function notFoundHandler(req: Request, res: Response, next: NextFunction): void {
+export function notFoundHandler(req: Request, _res: Response, next: NextFunction): void {
   const error = new AppError(
     `Route ${req.originalUrl} not found`,
     HTTP_STATUS.NOT_FOUND

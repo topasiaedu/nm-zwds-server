@@ -58,6 +58,8 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/services/emailService.ts",
+    "src/services/oauth2EmailService.ts"
   ]
 }

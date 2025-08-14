@@ -40,12 +40,15 @@ class Logger {
    * @returns {LogEntry} Formatted log entry
    */
   private createLogEntry(level: LogLevel, message: string, data?: unknown): LogEntry {
-    return {
+    const entry: LogEntry = {
       timestamp: this.getTimestamp(),
       level,
       message,
-      ...(data && { data }),
     };
+    if (typeof data !== "undefined") {
+      return { ...entry, data };
+    }
+    return entry;
   }
 
   /**

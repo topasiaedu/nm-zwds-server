@@ -95,12 +95,7 @@ export const lifecycleDecoderSchema = z.object({
       "Birth time must be in HH:MM format (24-hour)"
     ),
     
-  gender: z
-    .enum(["male", "female", "other"], {
-      errorMap: () => ({
-        message: "Gender must be one of: male, female, other"
-      })
-    }),
+  gender: z.enum(["male", "female", "other"]).describe("Gender must be one of: male, female, other"),
 });
 
 /**
@@ -142,7 +137,7 @@ export function safeValidateLifecycleDecoderRequest(data: unknown) {
  * @returns {string[]} Array of formatted error messages
  */
 export function formatValidationErrors(error: z.ZodError): string[] {
-  return error.errors.map((err) => {
+  return error.issues.map((err) => {
     const path = err.path.length > 0 ? `${err.path.join(".")}: ` : "";
     return `${path}${err.message}`;
   });

@@ -21,7 +21,7 @@ export function createHealthRouter(): Router {
    * GET /health - Basic health check endpoint
    * Returns server health status and basic information
    */
-  router.get("/", asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  router.get("/", asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     const healthData: HealthCheckResponse = {
       status: "healthy",
       uptime: Math.floor(process.uptime()),
@@ -43,7 +43,7 @@ export function createHealthRouter(): Router {
    * GET /health/detailed - Detailed health check endpoint
    * Returns comprehensive server information
    */
-  router.get("/detailed", asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  router.get("/detailed", asyncHandler(async (_req: Request, res: Response): Promise<void> => {
     const memoryUsage = process.memoryUsage();
     
     const detailedHealthData = {
