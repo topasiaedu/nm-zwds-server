@@ -49,8 +49,7 @@
     "allowUnusedLabels": false,
 
     /* Advanced */
-    "skipLibCheck": true,
-    "types": ["node"]
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"
