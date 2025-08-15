@@ -5,14 +5,14 @@
  * Following strict TypeScript guidelines with proper error checking.
  */
 
-import dotenv from "dotenv";
+import { config as loadEnv } from "dotenv";
 import path from "path";
 import { EnvironmentConfig } from "@/types";
 import { logger } from "@/utils/logger";
 
 // Load environment variables from .env file with explicit path
 const envPath = path.resolve(process.cwd(), ".env");
-const envResult = dotenv.config({ path: envPath });
+const envResult = loadEnv({ path: envPath });
 
 if (envResult.error) {
   console.error("Failed to load .env file:", envResult.error);
