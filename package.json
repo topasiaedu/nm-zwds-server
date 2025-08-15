@@ -5,12 +5,13 @@
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "npm ci",
-    "build": "tsc && tsc-alias",
+    "build": "tsc && tsc-alias && npm run copy-assets",
     "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config -r tsconfig-paths/register src/index.ts",
     "start": "node dist/index.js",
     "render-build": "npm ci && npm run build",
     "clean": "rimraf dist",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "copy-assets": "node -e \"const fs=require('fs'),path=require('path');const copy=(s,d)=>{fs.mkdirSync(d,{recursive:true});for(const e of fs.readdirSync(s,{withFileTypes:true})){const sp=path.join(s,e.name),dp=path.join(d,e.name);e.isDirectory()?copy(sp,dp):fs.copyFileSync(sp,dp);}};copy('src/assets','dist/assets');\""
   },
   "keywords": [
     "typescript",
