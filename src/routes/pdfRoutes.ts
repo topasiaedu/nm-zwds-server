@@ -6,11 +6,6 @@
  */
 
 import { Router, Request, Response, NextFunction } from "express";
-import { z } from "zod";
-import { 
-  validateLifecycleDecoderRequest, 
-  formatValidationErrors 
-} from "@/validators/lifecycleDecoderValidator";
 import { pdfService } from "@/services/pdfService";
 import { uploadPdfToSupabase } from "@/services/storageService";
 import { logger } from "@/utils/logger";
@@ -68,8 +63,8 @@ router.post("/lifecycle-decoder", asyncHandler(async (
   res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
-    // Validate request body
-    const validatedData = validateLifecycleDecoderRequest(req.body);
+    // Basic trust of input (validation removed per project simplification)
+    const validatedData = req.body as LifecycleDecoderRequest;
 
     logger.info("Processing lifecycle decoder request", {
       name: validatedData.name,
@@ -111,25 +106,6 @@ router.post("/lifecycle-decoder", asyncHandler(async (
     });
 
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const validationErrors = formatValidationErrors(error);
-      
-      logger.warn("Validation failed for lifecycle decoder request", {
-        errors: validationErrors,
-        body: req.body,
-      });
-
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success: false,
-        message: "Validation failed",
-        data: {
-          errors: validationErrors,
-        } as any,
-        timestamp: new Date().toISOString(),
-      });
-      return;
-    }
-
     logger.error("Unexpected error in lifecycle decoder endpoint", error);
 
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
@@ -149,8 +125,7 @@ router.post("/wealth-decoder", asyncHandler(async (
   res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
-    // Validate request body
-    const validatedData = validateLifecycleDecoderRequest(req.body);
+    const validatedData = req.body as LifecycleDecoderRequest;
 
     logger.info("Processing wealth decoder request", {
       name: validatedData.name,
@@ -192,25 +167,6 @@ router.post("/wealth-decoder", asyncHandler(async (
     });
 
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const validationErrors = formatValidationErrors(error);
-      
-      logger.warn("Validation failed for wealth decoder request", {
-        errors: validationErrors,
-        body: req.body,
-      });
-
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success: false,
-        message: "Validation failed",
-        data: {
-          errors: validationErrors,
-        } as any,
-        timestamp: new Date().toISOString(),
-      });
-      return;
-    }
-
     logger.error("Unexpected error in wealth decoder endpoint", error);
 
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
@@ -230,8 +186,7 @@ router.post("/career-timing-window", asyncHandler(async (
   res: Response<ApiResponse<{ url?: string }>>
 ): Promise<void> => {
   try {
-    // Validate request body
-    const validatedData = validateLifecycleDecoderRequest(req.body);
+    const validatedData = req.body as LifecycleDecoderRequest;
 
     logger.info("Processing career timing window request", {
       name: validatedData.name,
@@ -273,25 +228,6 @@ router.post("/career-timing-window", asyncHandler(async (
     });
 
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const validationErrors = formatValidationErrors(error);
-      
-      logger.warn("Validation failed for career timing window request", {
-        errors: validationErrors,
-        body: req.body,
-      });
-
-      res.status(HTTP_STATUS.BAD_REQUEST).json({
-        success: false,
-        message: "Validation failed",
-        data: {
-          errors: validationErrors,
-        } as any,
-        timestamp: new Date().toISOString(),
-      });
-      return;
-    }
-
     logger.error("Unexpected error in career timing window endpoint", error);
 
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
