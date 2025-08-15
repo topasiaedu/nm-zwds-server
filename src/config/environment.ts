@@ -60,18 +60,12 @@ function loadEnvironmentConfig(): EnvironmentConfig {
   try {
     const portValue = process.env.PORT || "3000";
     const apiVersion = process.env.API_VERSION || "v1";
-    
+
     return {
       PORT: parseNumberEnvVar(portValue, "PORT"),
       NODE_ENV: validateNodeEnv(process.env.NODE_ENV),
       API_VERSION: apiVersion.trim(),
       FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3000",
-      EMAIL: {
-        from: process.env.EMAIL_FROM || "askcae@topasiaedu.com",
-        fromName: process.env.EMAIL_FROM_NAME || "CAE",
-        serviceAccountPath: process.env.GOOGLE_SERVICE_ACCOUNT_PATH || "src/i-monolith-468106-n8-516d38ed8806.json",
-        delegateEmail: process.env.EMAIL_DELEGATE || "askcae@topasiaedu.com",
-      },
       SUPABASE: {
         url: process.env.SUPABASE_URL || "",
         key: process.env.SUPABASE_KEY || "",
@@ -97,10 +91,4 @@ logger.info("Environment configuration loaded", {
   NODE_ENV: config.NODE_ENV,
   API_VERSION: config.API_VERSION,
   FRONTEND_URL: config.FRONTEND_URL,
-  EMAIL: {
-    from: config.EMAIL.from,
-    fromName: config.EMAIL.fromName,
-    delegateEmail: config.EMAIL.delegateEmail,
-    serviceAccountPath: config.EMAIL.serviceAccountPath,
-  },
 });

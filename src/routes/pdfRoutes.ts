@@ -1,7 +1,7 @@
 /**
  * PDF Generation API routes
  * 
- * Handles all PDF generation requests and sends them via email
+ * Handles all PDF generation requests and uploads them to Supabase
  * Following the established patterns and strict TypeScript guidelines
  */
 
@@ -13,7 +13,6 @@ import {
 } from "@/validators/lifecycleDecoderValidator";
 import { pdfService } from "@/services/pdfService";
 import { uploadPdfToSupabase } from "@/services/storageService";
-// import { emailService } from "@/services/emailService";
 import { logger } from "@/utils/logger";
 import { ApiResponse, HTTP_STATUS, TypedRequest, LifecycleDecoderRequest } from "@/types";
 import { config } from "@/config/environment";
@@ -62,7 +61,7 @@ function savePdfToFolder(buffer: Buffer, filename: string): string {
 
 /**
  * POST /lifecycle-decoder
- * Generate and email a lifecycle decoder PDF report
+ * Generate and upload a lifecycle decoder PDF report
  */
 router.post("/lifecycle-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
@@ -95,28 +94,7 @@ router.post("/lifecycle-decoder", asyncHandler(async (
       userName: validatedData.name,
     });
 
-    // TODO: Uncomment when email service is ready
-    // // Send email with PDF attachment
-    // const emailResult = await emailService.sendLifecycleDecoderPdf(
-    //   validatedData.email,
-    //   validatedData.name,
-    //   pdfResult.buffer,
-    //   pdfResult.filename
-    // );
-
-    // if (!emailResult.success) {
-    //   logger.error("Failed to send email", {
-    //     email: validatedData.email,
-    //     error: emailResult.error,
-    //   });
-
-    //   res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    //     success: false,
-    //     message: "Failed to send email with PDF report",
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return;
-    // }
+    // Email flow removed; PDFs are uploaded to Supabase and link is returned
 
     logger.info("Lifecycle decoder request completed successfully", {
       name: validatedData.name,
@@ -164,7 +142,7 @@ router.post("/lifecycle-decoder", asyncHandler(async (
 
 /**
  * POST /wealth-decoder
- * Generate and email a wealth decoder PDF report
+ * Generate and upload a wealth decoder PDF report
  */
 router.post("/wealth-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
@@ -197,19 +175,7 @@ router.post("/wealth-decoder", asyncHandler(async (
       userName: validatedData.name,
     });
 
-    // if (!emailResult.success) {
-    //   logger.error("Failed to send email", {
-    //     email: validatedData.email,
-    //     error: emailResult.error,
-    //   });
-
-    //   res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    //     success: false,
-    //     message: "Failed to send email with PDF report",
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return;
-    // }
+    // Email flow removed
 
     logger.info("Wealth decoder request completed successfully", {
       name: validatedData.name,
@@ -257,7 +223,7 @@ router.post("/wealth-decoder", asyncHandler(async (
 
 /**
  * POST /career-timing-window
- * Generate and email a career timing window PDF report
+ * Generate and upload a career timing window PDF report
  */
 router.post("/career-timing-window", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
@@ -290,19 +256,7 @@ router.post("/career-timing-window", asyncHandler(async (
       userName: validatedData.name,
     });
 
-    // if (!emailResult.success) {
-    //   logger.error("Failed to send email", {
-    //     email: validatedData.email,
-    //     error: emailResult.error,
-    //   });
-
-    //   res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    //     success: false,
-    //     message: "Failed to send email with PDF report",
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return;
-    // }
+    // Email flow removed
 
     logger.info("Career timing window request completed successfully", {
       name: validatedData.name,
@@ -427,27 +381,7 @@ router.post("/test", asyncHandler(async (
       userName: testData.name,
     });
 
-    // TODO: Uncomment when email service is ready
-    // // Send email with PDF attachment
-    // const emailResult = await emailService.sendLifecycleDecoderPdf(
-    //   testData.email,
-    //   testData.name,
-    //   pdfResult.buffer,
-    //   pdfResult.filename
-    // );
-
-    // if (!emailResult.success) {
-    //   logger.error("Failed to send test email", {
-    //     error: emailResult.error,
-    //   });
-
-    //   res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    //     success: false,
-    //     message: "Failed to send test email with PDF report",
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return;
-    // }
+    // Email flow removed
 
     logger.info("Test PDF request completed successfully", {
       pdfType,

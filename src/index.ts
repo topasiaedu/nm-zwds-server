@@ -5,7 +5,7 @@
  * Following strict TypeScript guidelines with comprehensive error checking.
  */
 
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { config } from "@/config/environment";
@@ -65,7 +65,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
     // Request logging middleware
-    this.app.use((req: Request, _res: Response, next) => {
+    this.app.use((req: Request, _res: Response, next: NextFunction) => {
       logger.info(`${req.method} ${req.path}`, {
         ip: req.ip,
         userAgent: req.get("User-Agent"),

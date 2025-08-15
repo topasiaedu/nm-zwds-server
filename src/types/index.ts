@@ -38,16 +38,6 @@ export interface HealthCheckResponse {
 }
 
 /**
- * Email configuration type for Gmail API with service account
- */
-export interface EmailConfig {
-  readonly from: string;
-  readonly fromName: string;
-  readonly serviceAccountPath: string;
-  readonly delegateEmail: string;
-}
-
-/**
  * Environment configuration type
  */
 export interface EnvironmentConfig {
@@ -55,7 +45,6 @@ export interface EnvironmentConfig {
   readonly NODE_ENV: "development" | "production" | "test";
   readonly API_VERSION: string;
   readonly FRONTEND_URL: string;
-  readonly EMAIL: EmailConfig;
   readonly SUPABASE: {
     readonly url: string;
     readonly key: string;
@@ -106,11 +95,4 @@ export interface PdfGenerationResult {
   readonly mimeType: string;
 }
 
-/**
- * Email sending result
- */
-export interface EmailSendResult {
-  readonly success: boolean;
-  readonly messageId?: string;
-  readonly error?: string;
-}
+// (Email-related types removed; emailing is no longer handled by this server)

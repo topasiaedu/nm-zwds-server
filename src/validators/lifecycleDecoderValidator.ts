@@ -56,7 +56,7 @@ export const lifecycleDecoderSchema = z.object({
     .max(100, "Name must be less than 100 characters")
     .trim()
     .refine(
-      (name) => name.length > 0,
+      (name: string) => name.length > 0,
       "Name cannot be empty after trimming whitespace"
     ),
     
@@ -67,7 +67,7 @@ export const lifecycleDecoderSchema = z.object({
     .trim()
     .toLowerCase()
     .refine(
-      (email) => EMAIL_REGEX.test(email),
+      (email: string) => EMAIL_REGEX.test(email),
       "Please provide a valid email address"
     ),
     
@@ -75,7 +75,7 @@ export const lifecycleDecoderSchema = z.object({
     .string()
     .min(1, "Birthday is required")
     .refine(
-      (date) => {
+      (date: string) => {
         // Check if it's a valid ISO date format (YYYY-MM-DD)
         const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
         return isoDateRegex.test(date);
@@ -83,7 +83,7 @@ export const lifecycleDecoderSchema = z.object({
       "Birthday must be in YYYY-MM-DD format"
     )
     .refine(
-      (date) => isValidBirthDate(date),
+      (date: string) => isValidBirthDate(date),
       "Please provide a valid birth date (not in the future and after 1900)"
     ),
     
@@ -91,7 +91,7 @@ export const lifecycleDecoderSchema = z.object({
     .string()
     .min(1, "Birth time is required")
     .refine(
-      (time) => TIME_REGEX.test(time),
+      (time: string) => TIME_REGEX.test(time),
       "Birth time must be in HH:MM format (24-hour)"
     ),
     
