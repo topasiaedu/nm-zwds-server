@@ -5,7 +5,7 @@
  * Supabase Storage bucket and generating signed URLs for client download.
  */
 
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { Blob } from "buffer";
 import { config } from "@/config/environment";
 import { logger } from "@/utils/logger";
@@ -32,12 +32,12 @@ export interface StorageUploadResult {
 /**
  * Internal singleton Supabase client instance
  */
-let supabase: SupabaseClient | null = null;
+let supabase: any | null = null;
 
 /**
  * Initialize and return a Supabase client using environment configuration
  */
-function getSupabaseClient(): SupabaseClient {
+function getSupabaseClient(): any {
   if (supabase) return supabase;
 
   const url = config.SUPABASE.url;
