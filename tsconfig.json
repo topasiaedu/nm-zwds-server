@@ -60,6 +60,7 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "src/services/emailService.ts",
-    "src/services/oauth2EmailService.ts"
+    "src/services/oauth2EmailService.ts",
+    "src/validators/**"
   ]
 }
