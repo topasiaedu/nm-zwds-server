@@ -175,12 +175,12 @@ abstract class BasePdfGenerator {
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         headless: true,
-        ignoreHTTPSErrors: true,
         args: [
           "--no-sandbox",
           "--disable-setuid-sandbox",
           "--disable-dev-shm-usage",
           "--disable-gpu",
+          "--ignore-certificate-errors",
           "--no-zygote",
         ],
       });
