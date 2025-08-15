@@ -175,7 +175,14 @@ abstract class BasePdfGenerator {
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         headless: true,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        ignoreHTTPSErrors: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+          "--no-zygote",
+        ],
       });
     }
   }
@@ -205,7 +212,13 @@ abstract class BasePdfGenerator {
       }
 
       const page: Page = await this.browser.newPage();
-      
+      // Harden navigation for remote servers (TLS, headless bot checks)
+      await page.setDefaultNavigationTimeout(60000);
+      await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+      );
+      await page.setExtraHTTPHeaders({ "Accept-Language": "en-US,en;q=0.9" });
+
       // Set viewport to match the chart container size
       await page.setViewport({ width: 900, height: 900 });
       
@@ -215,7 +228,15 @@ abstract class BasePdfGenerator {
       logger.info("Taking chart screenshot", { url });
       
       // Navigate to the page
-      await page.goto(url, { waitUntil: "networkidle2" });
+      try {
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
+      } catch (err) {
+        logger.warn("First navigation attempt failed, retrying with 'load'", {
+          url,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        await page.goto(url, { waitUntil: "load", timeout: 60000 });
+      }
       
       // Wait for the chart container to be present - try multiple selectors
       let element = null;
@@ -229,7 +250,7 @@ abstract class BasePdfGenerator {
       
       for (const selector of selectors) {
         try {
-          await page.waitForSelector(selector, { timeout: 5000 });
+          await page.waitForSelector(selector, { timeout: 15000 });
           element = await page.$(selector);
           if (element) {
             logger.info("Found chart element with selector", { selector });
