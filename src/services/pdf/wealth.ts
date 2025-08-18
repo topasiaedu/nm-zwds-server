@@ -126,10 +126,8 @@ export class WealthDecoderPdfGenerator extends BasePdfGenerator {
     this.doc.addPage();
     this.currentPage++;
     
-    // Wealth decoder agenda (skeleton): only include the chart page for now
-    const items: AgendaItem[] = [
-      { text: "Your Zi Wei Chart", page: 3 },
-    ];
+    // Build dynamic agenda based on the sections that will be rendered
+    const items: AgendaItem[] = this.buildAgendaItems();
     
     this.renderAgendaPage(
       "What is in this report",
@@ -140,6 +138,127 @@ export class WealthDecoderPdfGenerator extends BasePdfGenerator {
   }
 
   // Removed getAgendaItems; agenda is rendered via shared renderer
+
+  /**
+   * Compute a dynamic agenda list with correct starting page numbers for each section.
+   * Assumptions:
+   * - Pages are rendered in this order after the agenda: Chart → Overview → Life Palace → Wealth Palace → Wealth Codes → Career Palace → Execution Style → Conclusion
+   * - Section page counts mirror their renderers in this class.
+   */
+  private buildAgendaItems(): AgendaItem[] {
+    // Cover (1) + Agenda (1) precede all other pages
+    const pageChart = 3;
+    
+    // Prepare calculator once for all downstream counts
+    const birth = new Date(this.data.birthday);
+    const calculator = new ZWDSCalculator({
+      year: birth.getFullYear(),
+      month: birth.getMonth() + 1,
+      day: birth.getDate(),
+      hour: extractBirthHour(this.data.birthTime),
+      gender: this.data.gender === "female" ? "female" : "male",
+      name: this.data.name,
+    });
+    const chart = calculator.calculate();
+
+    // Helper: count pages for star-meaning sections (first page + 2-per-page for remaining stars)
+    const countStarPages = (mainStarCount: number): number => {
+      const remaining = Math.max(0, mainStarCount - 1);
+      const extraPages = Math.ceil(remaining / 2);
+      return 1 + extraPages; // at least the initial page
+    };
+
+    // Life palace star count
+    const lifePalaceIndex = chart.lifePalace - 1;
+    const lifePalace = chart.palaces[lifePalaceIndex];
+    const lifeStarsCount = Array.isArray(lifePalace?.mainStar) ? lifePalace!.mainStar.length : 0;
+    const lifePages = countStarPages(lifeStarsCount);
+
+    // Wealth palace stars (with fallback to opposite palace if needed)
+    const wealthIdx = (chart.lifePalace - 1 + 4) % 12;
+    const wealthPalace = chart.palaces[wealthIdx];
+    let wealthStarsCount = Array.isArray(wealthPalace?.mainStar) ? wealthPalace!.mainStar.length : 0;
+    if (wealthStarsCount === 0) {
+      const oppositeZh = OPPOSITE_PALACE_INFLUENCE[(wealthPalace?.name as keyof typeof OPPOSITE_PALACE_INFLUENCE) || "财帛"];
+      const opposite = chart.palaces.find(p => p.name === oppositeZh);
+      wealthStarsCount = Array.isArray(opposite?.mainStar) ? opposite!.mainStar.length : 0;
+    }
+    const wealthPages = countStarPages(wealthStarsCount);
+
+    // Career palace stars (with fallback to opposite palace if needed)
+    const careerIdx = (chart.lifePalace - 1 + 6) % 12;
+    const careerPalace = chart.palaces[careerIdx];
+    let careerStarsCount = Array.isArray(careerPalace?.mainStar) ? careerPalace!.mainStar.length : 0;
+    if (careerStarsCount === 0) {
+      const oppositeZh = OPPOSITE_PALACE_INFLUENCE[(careerPalace?.name as keyof typeof OPPOSITE_PALACE_INFLUENCE) || "官禄"];
+      const opposite = chart.palaces.find(p => p.name === oppositeZh);
+      careerStarsCount = Array.isArray(opposite?.mainStar) ? opposite!.mainStar.length : 0;
+    }
+    const careerPages = countStarPages(careerStarsCount);
+
+    // Wealth codes (2 pages per code)
+    let wealthCodeItems: ReadonlyArray<{ text: string; page: number }> = [];
+    let wealthCodePages = 0;
+    {
+      // Determine codes from wealth palace stars with same fallback
+      let wealthStarsZh: string[] = Array.isArray(wealthPalace?.mainStar) ? wealthPalace!.mainStar.map(s => s.name) : [];
+      if (wealthStarsZh.length === 0) {
+        const oppositeZh = OPPOSITE_PALACE_INFLUENCE[(wealthPalace?.name as keyof typeof OPPOSITE_PALACE_INFLUENCE) || "财帛"];
+        const opposite = chart.palaces.find(p => p.name === oppositeZh);
+        if (opposite?.mainStar) wealthStarsZh = opposite.mainStar.map(s => s.name);
+      }
+      const codes = classifyWealthCodesByStars(wealthStarsZh, { limit: 4 });
+      wealthCodePages = codes.length * 2;
+      // Subitems list one entry per code at its starting page
+      // Page numbers are filled after we compute section starts below
+      wealthCodeItems = codes.map((code) => ({ text: code, page: 0 }));
+    }
+
+    // Execution style (2 pages if derivable from career/opposite stars)
+    let execPages = 0;
+    {
+      let execStarsZh: string[] = Array.isArray(careerPalace?.mainStar) ? careerPalace!.mainStar.map(s => s.name) : [];
+      if (execStarsZh.length === 0) {
+        const oppositeZh = OPPOSITE_PALACE_INFLUENCE[(careerPalace?.name as keyof typeof OPPOSITE_PALACE_INFLUENCE) || "官禄"];
+        const opposite = chart.palaces.find(p => p.name === oppositeZh);
+        if (opposite?.mainStar) execStarsZh = opposite.mainStar.map(s => s.name);
+      }
+      execPages = execStarsZh.length > 0 ? 2 : 0;
+    }
+
+    // Now map sections to absolute starting pages
+    const items: AgendaItem[] = [];
+    items.push({ text: "Your Zi Wei Chart", page: pageChart });
+
+    const pageOverview = pageChart + 1;
+    items.push({ text: "Overview", page: pageOverview });
+
+    const pageLife = pageOverview + 1;
+    items.push({ text: "Life Palace", page: pageLife });
+
+    const pageWealth = pageLife + lifePages;
+    items.push({ text: "Wealth Palace", page: pageWealth });
+
+    const pageWealthCodes = pageWealth + wealthPages;
+    if (wealthCodePages > 0) {
+      // Fill subitem page numbers now that we know the section start
+      const subitems = wealthCodeItems.map((s, idx) => ({ text: s.text, page: pageWealthCodes + idx * 2 }));
+      items.push({ text: "Wealth Codes", page: pageWealthCodes, subitems });
+    }
+
+    const pageCareer = pageWealthCodes + wealthCodePages;
+    items.push({ text: "Career Palace", page: pageCareer });
+
+    const pageExecution = pageCareer + careerPages;
+    if (execPages > 0) {
+      items.push({ text: "Execution Style", page: pageExecution });
+    }
+
+    const pageConclusion = pageExecution + execPages;
+    items.push({ text: "Conclusion", page: pageConclusion });
+
+    return items;
+  }
 
   /** Generate chart page mirroring lifecycle layout (header, personal info, chart) */
   private async generateChartPage(): Promise<void> {
