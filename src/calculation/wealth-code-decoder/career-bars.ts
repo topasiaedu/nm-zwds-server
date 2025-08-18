@@ -1,5 +1,5 @@
 /**
- * Wealth Palace（财帛） — Money Behavior & Strategy Bars
+ * Wealth Palace（财帛）   Money Behavior & Strategy Bars
  * - Dynamic normalization per profile
  * - Friendly uplift: neutral -> 70, hard floor at 60
  */

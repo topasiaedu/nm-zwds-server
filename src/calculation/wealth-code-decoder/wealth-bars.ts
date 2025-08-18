@@ -1,5 +1,5 @@
 /**
- * Career Palace（官禄） — Execution Style Bars
+ * Career Palace（官禄）   Execution Style Bars
  * - Dynamic normalization per profile
  * - Friendly uplift: neutral -> 70, hard floor at 60
  */

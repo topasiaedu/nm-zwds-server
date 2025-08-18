@@ -14,6 +14,7 @@ import { globalErrorHandler, notFoundHandler } from "@/middleware/errorHandler";
 import { createHealthRouter } from "@/routes/health";
 import pdfRoutes from "@/routes/pdfRoutes";
 import { ApiResponse, HTTP_STATUS } from "@/types";
+import { setupSwagger } from "@/config/swagger";
 
 /**
  * Server class to encapsulate application setup and lifecycle
@@ -44,7 +45,7 @@ class Server {
         directives: {
           defaultSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
-          scriptSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", "data:", "https:"],
         },
       },
@@ -82,6 +83,9 @@ class Server {
   private setupRoutes(): void {
     // API version prefix
     const apiPrefix = `/api/${config.API_VERSION}`;
+
+    // Swagger UI and spec
+    setupSwagger(this.app);
 
     // Root endpoint
     this.app.get("/", (_req: Request, res: Response): void => {
@@ -128,6 +132,8 @@ class Server {
             `POST ${apiPrefix}/career-timing-window`,
             `POST ${apiPrefix}/health`,
             `POST ${apiPrefix}/test`,
+            "GET /api-docs",
+            "GET /api-docs.json",
           ],
         },
         timestamp: new Date().toISOString(),

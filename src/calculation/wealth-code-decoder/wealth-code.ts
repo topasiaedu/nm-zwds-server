@@ -4,17 +4,17 @@
 export type WealthCodeKey = "Strategy Planner" | "Investment Brain" | "Branding Magnet" | "Collaborator";
 
 export const WEALTH_CODE_DESCRIPTION: Record<WealthCodeKey, string> = {
-  "Strategy Planner": "Your wealth code compounds through systems, foresight, and structured power. You turn vision into roadmaps, budgets, and governance that keep results predictable. People trust your calm judgment and follow clear standards you publish. Choose arenas where patience beats hype—regulated sectors, executive roles, high‑end services. Trade hustle for cadence: set decision windows, document playbooks, and delegate authority so value scales beyond you. Guard against over‑control and analysis drag by time‑boxing research and measuring leading indicators. When stewardship, clarity, and execution discipline meet, your assets—people, trust, and process—compound quietly into durable wealth.",
-  "Investment Brain": "You win by logic, long‑term planning, and capital efficiency—making money do the work. You size positions, price risk, and design rebalancing rules that reduce emotion. Cashflow, reserves, and unit economics guide your moves, whether you manage portfolios or businesses. Prefer vehicles you can actually hold—retainers, royalties, durable operations—and review allocations on a cadence. Watch the shadow: penny‑wise cuts that starve growth or endless tinkering that delays compounding. Set decision criteria upfront, cap downside with stop rules, and fund validated bets. With discipline and patient instruments, returns stack steadily without drama.",
-  "Branding Magnet": "You monetize visibility, charisma, and narrative. Attention is your engine; trust is your currency. Build channels, a signature point of view, and a publishing cadence that turns audience into demand and pricing power. Convert spotlight into offers—products, experiences, and licensed IP—using clear funnels and delivery standards. Protect capacity, avoid vanity metrics, and let data steer which stories scale. The pitfalls are inconsistency, hype without substance, and burnout. Pair showmanship with operations, measure conversion not applause, and keep quality non‑negotiable. When presence meets proof, your brand compounds into predictable revenue.",
-  "Collaborator": "You grow wealth as the trusted force‑multiplier behind the right people. Your edge is partnership: translating goals into plans, smoothing handoffs, and keeping commitments real. Choose retainer‑friendly models—accounts, platforms, community ops—where reliability compounds. Systemize enablement with templates, SLAs, and decision rights so impact isn’t tied to your heroic effort. Guard against over‑functioning and blurred boundaries; price for responsibility and escalate early when alignment slips. Align incentives to outcomes, not tasks. In strong alliances, your steadiness, discretion, and execution make you indispensable—and partners pull you upward as they win."
+  "Strategy Planner": "Your wealth code compounds through systems, foresight, and structured power. You turn vision into roadmaps, budgets, and governance that keep results predictable. People trust your calm judgment and follow clear standards you publish. Choose arenas where patience beats hype regulated sectors, executive roles, high-end services. Trade hustle for cadence: set decision windows, document playbooks, and delegate authority so value scales beyond you. Guard against over-control and analysis drag by time-boxing research and measuring leading indicators. When stewardship, clarity, and execution discipline meet, your assets people, trust, and process compound quietly into durable wealth.",
+  "Investment Brain": "You win by logic, long-term planning, and capital efficiency making money do the work. You size positions, price risk, and design rebalancing rules that reduce emotion. Cashflow, reserves, and unit economics guide your moves, whether you manage portfolios or businesses. Prefer vehicles you can actually hold retainers, royalties, durable operations and review allocations on a cadence. Watch the shadow: penny-wise cuts that starve growth or endless tinkering that delays compounding. Set decision criteria upfront, cap downside with stop rules, and fund validated bets. With discipline and patient instruments, returns stack steadily without drama.",
+  "Branding Magnet": "You monetize visibility, charisma, and narrative. Attention is your engine; trust is your currency. Build channels, a signature point of view, and a publishing cadence that turns audience into demand and pricing power. Convert spotlight into offers products, experiences, and licensed IP using clear funnels and delivery standards. Protect capacity, avoid vanity metrics, and let data steer which stories scale. The pitfalls are inconsistency, hype without substance, and burnout. Pair showmanship with operations, measure conversion not applause, and keep quality non-negotiable. When presence meets proof, your brand compounds into predictable revenue.",
+  "Collaborator": "You grow wealth as the trusted force-multiplier behind the right people. Your edge is partnership: translating goals into plans, smoothing handoffs, and keeping commitments real. Choose retainer-friendly models accounts, platforms, community ops where reliability compounds. Systemize enablement with templates, SLAs, and decision rights so impact isn’t tied to your heroic effort. Guard against over-functioning and blurred boundaries; price for responsibility and escalate early when alignment slips."
 };
 
 export const WEALTH_CODE_LEADERSHIP: Record<WealthCodeKey, string> = {
-  "Strategy Planner": "Lead by cadence and clarity. Build process‑first businesses (B2B services, regulated ops, enterprise platforms). Favor multi‑year roadmaps, retainers, and standard operating reviews over churny sprints. Publish decision rights, install weekly/quarterly scorecards, and delegate budgets with guardrails. Hire operators who love checklists and PMs who think in systems. Use pre‑mortems and change‑control to prevent drift. Your edge: predictable execution that compounds into scale and valuation.",
-  "Investment Brain": "Lead by capital discipline. Build cashflow‑first companies (subscriptions, infrastructure, asset‑backed services). Favor reserves, unit‑economics dashboards, and rebalancing cadences over impulse bets. Set hurdle rates, position sizes, and stop rules; fund experiments only after evidence. Hire FP&A and ops talent who speak in cohorts and cash conversion. Align incentives to ROIC, not activity. Your edge: unemotional allocation that protects downside while quietly stacking returns.",
-  "Branding Magnet": "Lead by signal and proof. Build brand‑led businesses (education, media, premium DTC, advisory). Favor content engines, community, and productized IP over one‑off hype. Protect creator time, install a publishing cadence, and measure conversion—not applause. Hire a sharp COO and delivery leads who can scale the promise. Keep waitlists, QA, and refund policies tight. Your edge: credible visibility that commands pricing power and repeat demand.",
-  "Collaborator": "Lead by partnership architecture. Build ecosystem businesses (platforms, channel sales, alliances, integrators). Favor retainers, revenue shares, and co‑selling motions over solo heroics. Set clear SLAs, deal desks, and escalation paths; make joint scorecards visible. Hire partner managers and enablement teams who certify playbooks. Price for responsibility, not tasks. Your edge: durable, humane coordination that turns many hands into one reliable machine."
+  "Strategy Planner": "Lead by cadence and clarity. Build process-first businesses (B2B services, regulated ops, enterprise platforms). Favor multi-year roadmaps, retainers, and standard operating reviews over churny sprints. Publish decision rights, install weekly/quarterly scorecards, and delegate budgets with guardrails. Hire operators who love checklists and PMs who think in systems. ",
+  "Investment Brain": "Lead by capital discipline. Build cashflow-first companies (subscriptions, infrastructure, asset-backed services). Favor reserves, unit-economics dashboards, and rebalancing cadences over impulse bets. Set hurdle rates, position sizes, and stop rules; fund experiments only after evidence. Hire FP&A and ops talent who speak in cohorts and cash conversion.",
+  "Branding Magnet": "Lead by signal and proof. Build brand-led businesses (education, media, premium DTC, advisory). Favor content engines, community, and productized IP over one-off hype. Protect creator time, install a publishing cadence, and measure conversion not applause. Your edge: credible visibility that commands pricing power and repeat demand.",
+  "Collaborator": "Lead by partnership architecture. Build ecosystem businesses (platforms, channel sales, alliances, integrators). Favor retainers, revenue shares, and co-selling motions over solo heroics. Set clear SLAs, deal desks, and escalation paths; make joint scorecards visible. Hire partner managers and enablement teams who certify playbooks. Price for responsibility, not tasks. Your edge: durable, humane coordination that turns many hands into one reliable machine."
 };
 
 // ---------------------------
@@ -167,9 +167,9 @@ export function explainWealthCodeVotes(
 
 
 export const WEALTH_CODE_TEAM_MEMBER: Record<WealthCodeKey, string> = {
-  "Strategy Planner": "Be the systems builder. Choose roles with long horizons (program ops, PMO, compliance, enterprise product). Bring order—roadmaps, RACIs, checklists, concise briefs—and ask for depth over churn. Own process health, publish decision logs, and standardize handoffs so the team moves predictably. Set boundaries so rigor doesn’t become red tape. Path: analyst → project manager → operations strategist.",
-  "Investment Brain": "Be the allocator’s right hand. Choose FP&A, treasury, revenue ops, or data roles where unit economics matter. Build models, size bets, and propose rebalances using cohorts and cash‑conversion metrics. Protect margin with small, instrumented experiments and clear stop rules. Guard against over‑optimization that stalls shipping. Path: analyst → senior FP&A/treasury → portfolio or biz‑ops lead.",
-  "Branding Magnet": "Be the signal maker. Choose content, growth, evangelism, partnerships, or sales enablement where audience and narrative convert to revenue. Ship on a publishing cadence, test messages, and optimize funnels for conversion—not applause. Keep quality non‑negotiable and protect maker time. Avoid vanity metrics; pair creativity with tight delivery. Path: creator/AE → growth or brand strategist → head of content/GTM.",
+  "Strategy Planner": "Be the systems builder. Choose roles with long horizons (program ops, PMO, compliance, enterprise product). Bring order roadmaps, RACIs, checklists, concise briefs and ask for depth over churn. Own process health, publish decision logs, and standardize handoffs so the team moves predictably. Set boundaries so rigor doesn’t become red tape. Path: analyst → project manager → operations strategist.",
+  "Investment Brain": "Be the allocator’s right hand. Choose FP&A, treasury, revenue ops, or data roles where unit economics matter. Build models, size bets, and propose rebalances using cohorts and cash-conversion metrics. Protect margin with small, instrumented experiments and clear stop rules. Guard against over-optimization that stalls shipping. Path: analyst → senior FP&A/treasury → portfolio or biz-ops lead.",
+  "Branding Magnet": "Be the signal maker. Choose content, growth, evangelism, partnerships, or sales enablement where audience and narrative convert to revenue. Ship on a publishing cadence, test messages, and optimize funnels for conversion not applause. Keep quality non-negotiable and protect maker time. Avoid vanity metrics; pair creativity with tight delivery. Path: creator/AE → growth or brand strategist → head of content/GTM.",
   "Collaborator": "Be the integrator. Choose account management, customer success, partner ops, or project coordination where reliability compounds. Design SLAs, map dependencies, and run crisp handoffs so outcomes are predictable and humane. Document agreements, escalate early, and price your effort with clear scope. Boundaries prevent quiet burnout. Path: coordinator → senior AM/CSM → program or partner lead."
 };
 
@@ -184,39 +184,39 @@ export const WEALTH_CODE_PILLARS: Record<WealthCodeKey, Pillar[]> = {
     },
     {
       title: "Cadence",
-      description: "Run weekly scoreboards and quarterly reviews with leading and lagging indicators. Break work into small, inspectable increments with visible owners, dates, and risks. Use daily progress signals—not status theater—and course‑correct through short retros rather than big resets."
+      description: "Run weekly scoreboards and quarterly reviews with leading and lagging indicators. Break work into small, inspectable increments with visible owners, dates, and risks. Use daily progress signals not status theater and course-correct through short retros rather than big resets."
     },
     {
       title: "Stewardship",
-      description: "Set budget guardrails, change‑control thresholds, and succession plans. Delegate with spending limits and clear escalation paths so decisions happen where the work is. Protect deep‑work blocks and quality gates; scale through standards and training, not heroics or more meetings."
+      description: "Set budget guardrails, change-control thresholds, and succession plans. Delegate with spending limits and clear escalation paths so decisions happen where the work is. Protect deep-work blocks and quality gates; scale through standards and training, not heroics or more meetings."
     }
   ],
   "Investment Brain": [
     {
       title: "Unit Economics",
-      description: "Instrument cohorts, CAC/LTV, payback, and cash conversion so every initiative earns its keep. Publish a simple unit‑economics model and review variance monthly. Approve spend only when thresholds are met and documented; kill or fix work that cannot pay back on schedule."
+      description: "Instrument cohorts, CAC/LTV, payback, and cash conversion so every initiative earns its keep. Publish a simple unit-economics model and review variance monthly. Approve spend only when thresholds are met and documented; kill or fix work that cannot pay back on schedule."
     },
     {
       title: "Allocation Rules",
-      description: "Pre‑define position sizing, rebalancing cadence, and hurdle rates to remove emotion. Use stop rules and maximum drawdown limits to cap downside. Keep a short written playbook so anyone can execute the policy the same way—even on a bad day."
+      description: "Pre-define position sizing, rebalancing cadence, and hurdle rates to remove emotion. Use stop rules and maximum drawdown limits to cap downside. Keep a short written playbook so anyone can execute the policy the same way even on a bad day."
     },
     {
       title: "Evidence Loops",
-      description: "Fund small pilots with explicit success criteria and budgets. Run pre‑mortems to anticipate failure modes, and post‑mortems to lock in lessons. Keep decision logs and move capital only when new evidence changes expected value."
+      description: "Fund small pilots with explicit success criteria and budgets. Run pre-mortems to anticipate failure modes, and post-mortems to lock in lessons. Keep decision logs and move capital only when new evidence changes expected value."
     }
   ],
   "Branding Magnet": [
     {
       title: "Audience Engine",
-      description: "Build a publishing cadence anchored by a clear point of view. Convert attention into owned lists and community with opt‑ins, nurture sequences, and regular events. Measure reach, engagement, and conversion separately so you scale signal—not noise."
+      description: "Build a publishing cadence anchored by a clear point of view. Convert attention into owned lists and community with opt-ins, nurture sequences, and regular events. Measure reach, engagement, and conversion separately so you scale signal not noise."
     },
     {
       title: "Offer Ladder",
-      description: "Design a ladder from free value to flagship offers—templates, courses, memberships, and high‑touch productized services. Map the funnel and onboarding for each step, then set fulfillment standards and renewal triggers. Packaging consistency creates pricing power and predictable revenue."
+      description: "Design a ladder from free value to flagship offers templates, courses, memberships, and high-touch productized services. Map the funnel and onboarding for each step, then set fulfillment standards and renewal triggers. Packaging consistency creates pricing power and predictable revenue."
     },
     {
       title: "Delivery Proof",
-      description: "Collect reviews, before‑and‑after stories, and case studies tied to measurable outcomes. Close the feedback loop with QA and customer success so the product continuously improves. Publish proof across sales and onboarding; credibility compounds faster than ads."
+      description: "Collect reviews, before-and-after stories, and case studies tied to measurable outcomes. Close the feedback loop with QA and customer success so the product continuously improves. Publish proof across sales and onboarding; credibility compounds faster than ads."
     }
   ],
   "Collaborator": [
@@ -230,7 +230,7 @@ export const WEALTH_CODE_PILLARS: Record<WealthCodeKey, Pillar[]> = {
     },
     {
       title: "Boundaries & Escalation",
-      description: "Set decision windows, RACI, and a clear escalation path before work begins. Hold a humane pace while protecting commitments; say no to scope creep and yes to transparent trade‑offs. Early escalation preserves relationships and results."
+      description: "Set decision windows, RACI, and a clear escalation path before work begins. Hold a humane pace while protecting commitments; say no to scope creep and yes to transparent trade-offs. Early escalation preserves relationships and results."
     }
   ]
 };

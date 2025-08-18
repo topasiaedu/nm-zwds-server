@@ -1,5 +1,5 @@
 /**
- * Life Palace（命宫） — 5-Bar Personality Snapshot
+ * Life Palace（命宫）   5-Bar Personality Snapshot
  * Bars: Identity & Confidence / Drive & Initiative / Adaptability / Emotional Poise / Clarity & Judgment
  * - Dynamic normalization per profile
  * - Friendly uplift: neutral -> 70, hard floor at 60 (configurable)
