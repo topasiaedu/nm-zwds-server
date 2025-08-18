@@ -9,6 +9,7 @@ import { DECADE_CYCLE_MEANINGS } from "@/calculation/life-cycle-decoder/decade_c
 import { STRENGTH, OPPORTUNITY, INFLUENCE, SUPPORT, VOLATILITY } from "@/calculation/life-cycle-decoder/score";
 import { OPPOSITE_PALACE_INFLUENCE } from "@/calculation/constants";
 import { LifecycleDecoderRequest } from "@/types";
+import { extractBirthHour, formatHourRangeFromBirthTime } from "@/utils/time";
 
 /**
  * Lifecycle Decoder PDF Generator
@@ -68,7 +69,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       year: birth.getFullYear(),
       month: birth.getMonth() + 1,
       day: birth.getDate(),
-      hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+      hour: extractBirthHour(this.data.birthTime),
       gender: this.data.gender === "female" ? "female" : "male",
       name: this.data.name,
     });
@@ -242,13 +243,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
     };
 
     /** Formats time range as HH:00 - HH:59 based on provided hour */
-    const formatBirthTimeRange = (hhmm: string): string => {
-      const [hStr] = hhmm.split(":");
-      const h = Number.parseInt(hStr || "0", 10);
-      const endH = (h + 1) % 24;
-      const pad = (n: number): string => n.toString().padStart(2, "0");
-      return `${pad(h)}:00 - ${pad(endH)}:59`;
-    };
+    const formatBirthTimeRange = (hhmm: string): string => formatHourRangeFromBirthTime(hhmm);
 
     // Left column labels
     const labels: readonly string[] = ["NAME", "BIRTHDAY", "BIRTHTIME", "GENDER"];
@@ -302,7 +297,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
         year: birth.getFullYear(),
         month: birth.getMonth() + 1,
         day: birth.getDate(),
-        hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+        hour: extractBirthHour(this.data.birthTime),
         gender: this.data.gender === "female" ? "female" : "male",
         name: this.data.name,
       });
@@ -339,7 +334,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       year: birth.getFullYear(),
       month: birth.getMonth() + 1,
       day: birth.getDate(),
-      hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+      hour: extractBirthHour(this.data.birthTime),
       gender: this.data.gender === "female" ? "female" : "male",
       name: this.data.name,
     });
@@ -455,7 +450,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       year: birth.getFullYear(),
       month: birth.getMonth() + 1,
       day: birth.getDate(),
-      hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+      hour: extractBirthHour(this.data.birthTime),
       gender: this.data.gender === "female" ? "female" : "male",
       name: this.data.name,
     });
@@ -596,7 +591,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
         year: birth.getFullYear(),
         month: birth.getMonth() + 1,
         day: birth.getDate(),
-        hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+        hour: extractBirthHour(this.data.birthTime),
         gender: this.data.gender === "female" ? "female" : "male",
         name: this.data.name,
       });
@@ -631,7 +626,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       year: birth.getFullYear(),
       month: birth.getMonth() + 1,
       day: birth.getDate(),
-      hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+      hour: extractBirthHour(this.data.birthTime),
       gender: this.data.gender === "female" ? "female" : "male",
       name: this.data.name,
     });
@@ -716,7 +711,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       year: birth.getFullYear(),
       month: birth.getMonth() + 1,
       day: birth.getDate(),
-      hour: Number.parseInt(this.data.birthTime.split(":")[0] || "0", 10),
+      hour: extractBirthHour(this.data.birthTime),
       gender: this.data.gender === "female" ? "female" : "male",
       name: this.data.name,
     });
@@ -1016,7 +1011,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
     this.doc.font(this.fontBoldName).fontSize(12).fillColor("#0b0f14").text(name, infoX, infoY, { width: infoW, align: "center" });
     this.doc.moveDown(0.4);
     const solar = `${birth.getFullYear()}-${String(birth.getMonth() + 1).padStart(2, "0")}-${String(birth.getDate()).padStart(2, "0")}`;
-    const timeRange = (() => { const h = Number.parseInt(birthTime.split(":")[0] || "0", 10); const e = (h + 1) % 24; const pad = (n: number) => String(n).padStart(2, "0"); return `${pad(h)}:00-${pad(e)}:59`; })();
+    const timeRange = formatHourRangeFromBirthTime(birthTime);
     label("Solar:", solar + " " + timeRange);
     label("Lunar:", `${lunar.year} Year ${lunar.month} Month ${lunar.day} Day${lunar.isLeap ? " (Leap)" : ""}`);
     label("Gender:", gender);

@@ -2,6 +2,7 @@ import path from "path";
 import { BasePdfGenerator, AgendaItem } from "./base";
 import { logger } from "@/utils/logger";
 import { LifecycleDecoderRequest } from "@/types";
+import { extractBirthHour } from "@/utils/time";
 
 /**
  * Career Timing Window PDF Generator
@@ -129,9 +130,8 @@ export class CareerTimingWindowPdfGenerator extends BasePdfGenerator {
       const month = birthDate.getMonth() + 1;
       const day = birthDate.getDate();
       
-      // Parse birth time
-      const [hourStr] = this.data.birthTime.split(":");
-      const hour = parseInt(hourStr || "0", 10);
+      // Parse birth time (accepts HH:MM or HH:MM ~ HH:MM; uses starting hour)
+      const hour = extractBirthHour(this.data.birthTime);
       
       // Take chart screenshot
       const screenshot = await this.takeChartScreenshot({

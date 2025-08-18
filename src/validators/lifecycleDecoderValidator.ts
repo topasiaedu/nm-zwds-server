@@ -7,6 +7,7 @@
 
 import { z } from "zod";
 import { LifecycleDecoderRequest } from "@/types";
+import { TIME_OR_RANGE_REGEX } from "@/utils/time";
 
 /**
  * Email validation regex pattern
@@ -14,9 +15,9 @@ import { LifecycleDecoderRequest } from "@/types";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * Time validation regex pattern (HH:MM format)
+ * Time validation regex pattern: accepts "HH:MM" or "HH:MM ~ HH:MM".
  */
-const TIME_REGEX = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+const TIME_REGEX = TIME_OR_RANGE_REGEX;
 
 /**
  * Date validation helper function
@@ -92,7 +93,7 @@ export const lifecycleDecoderSchema = z.object({
     .min(1, "Birth time is required")
     .refine(
       (time: string) => TIME_REGEX.test(time),
-      "Birth time must be in HH:MM format (24-hour)"
+      "Birth time must be in HH:MM or HH:MM ~ HH:MM format (24-hour)"
     ),
     
   gender: z.enum(["male", "female", "other"]).describe("Gender must be one of: male, female, other"),

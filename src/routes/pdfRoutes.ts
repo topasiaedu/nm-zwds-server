@@ -68,6 +68,14 @@ router.post("/lifecycle-decoder", asyncHandler(async (
     // Basic trust of input (validation removed per project simplification)
     const validatedData = req.body as LifecycleDecoderRequest;
 
+    // Log the full incoming payload for debugging (dev only)
+    if (config.NODE_ENV === "development") {
+      logger.debug("Incoming payload for /lifecycle-decoder", {
+        route: "/lifecycle-decoder",
+        payload: validatedData,
+      });
+    }
+
     logger.info("Processing lifecycle decoder request", {
       name: validatedData.name,
       email: validatedData.email,
@@ -130,6 +138,14 @@ router.post("/wealth-decoder", asyncHandler(async (
   try {
     const validatedData = req.body as LifecycleDecoderRequest;
 
+    // Log the full incoming payload for debugging (dev only)
+    if (config.NODE_ENV === "development") {
+      logger.debug("Incoming payload for /wealth-decoder", {
+        route: "/wealth-decoder",
+        payload: validatedData,
+      });
+    }
+
     logger.info("Processing wealth decoder request", {
       name: validatedData.name,
       email: validatedData.email,
@@ -191,6 +207,13 @@ router.post("/career-timing-window", asyncHandler(async (
 ): Promise<void> => {
   try {
     const validatedData = req.body as LifecycleDecoderRequest;
+
+    // Log the full incoming payload for debugging (dev only)
+      logger.debug("Incoming payload for /career-timing-window", {
+        route: "/career-timing-window",
+        payload: validatedData,
+      });
+    
 
     logger.info("Processing career timing window request", {
       name: validatedData.name,
@@ -270,6 +293,13 @@ router.post("/test", asyncHandler(async (
 ): Promise<void> => {
   try {
     const { pdfType = "lifecycle-decoder" } = req.body;
+
+    if (config.NODE_ENV === "development") {
+      logger.debug("Incoming payload for /test", {
+        route: "/test",
+        payload: req.body,
+      });
+    }
 
     // Use predefined test data
     const testData: LifecycleDecoderRequest = {

@@ -82,7 +82,7 @@ export interface LifecycleDecoderRequest {
   readonly name: string;
   readonly email: string;
   readonly birthday: string; // ISO date string (YYYY-MM-DD)
-  readonly birthTime: string; // HH:MM format
+  readonly birthTime: string; // "HH:MM" or "HH:MM ~ HH:MM" (24-hour)
   readonly gender: "male" | "female" | "other";
 }
 
