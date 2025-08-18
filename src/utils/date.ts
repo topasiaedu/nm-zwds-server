@@ -26,11 +26,17 @@ function pad2(n: number): string { return n.toString().padStart(2, "0"); }
 /** Try to parse strings like "May 14th 1999" or "May 14 1999" (case-insensitive) */
 function parseMonthDayYear(input: string): { year: number; month: number; day: number } | null {
   const cleaned: string = input.trim().replace(/,/g, "");
-  const m = cleaned.match(/^([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})$/i);
+  const m: RegExpMatchArray | null = cleaned.match(/^([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})$/i);
   if (!m) return null;
-  const monthName: string = m[1].toLowerCase();
-  const dayStr: string = m[2];
-  const yearStr: string = m[3];
+  const monthRaw: string | undefined = m[1];
+  const dayStrRaw: string | undefined = m[2];
+  const yearStrRaw: string | undefined = m[3];
+  if (typeof monthRaw !== "string" || typeof dayStrRaw !== "string" || typeof yearStrRaw !== "string") {
+    return null;
+  }
+  const monthName: string = monthRaw.toLowerCase();
+  const dayStr: string = dayStrRaw;
+  const yearStr: string = yearStrRaw;
   const month: number | undefined = MONTHS[monthName];
   const day: number = Number.parseInt(dayStr, 10);
   const year: number = Number.parseInt(yearStr, 10);
