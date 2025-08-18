@@ -10,7 +10,8 @@
     "render-build": "npm ci && npm run build",
     "clean": "rimraf dist",
     "type-check": "tsc --noEmit",
-    "copy-assets": "node -e \"const fs=require('fs'),path=require('path');const copy=(s,d)=>{fs.mkdirSync(d,{recursive:true});for(const e of fs.readdirSync(s,{withFileTypes:true})){const sp=path.join(s,e.name),dp=path.join(d,e.name);e.isDirectory()?copy(sp,dp):fs.copyFileSync(sp,dp);}};copy('src/assets','dist/assets');\""
+    "copy-assets": "node -e \"const fs=require('fs'),path=require('path');const copy=(s,d)=>{fs.mkdirSync(d,{recursive:true});for(const e of fs.readdirSync(s,{withFileTypes:true})){const sp=path.join(s,e.name),dp=path.join(d,e.name);e.isDirectory()?copy(sp,dp):fs.copyFileSync(sp,dp);}};copy('src/assets','dist/assets');\"",
+    "update-server": "pm2 stop ltfpdf && git pull && npm run build && pm2 restart ltfpdf"
   },
   "keywords": [
     "typescript",

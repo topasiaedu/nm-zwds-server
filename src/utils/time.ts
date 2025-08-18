@@ -21,8 +21,11 @@ export function extractBirthHour(value: string): number {
   if (!match) {
     throw new Error("Invalid birthTime format. Expected \"HH:MM\" or \"HH:MM ~ HH:MM\"");
   }
-  const hourStr: string = match[1];
-  const hour: number = Number.parseInt(hourStr, 10);
+  const hourGroup: string | undefined = match[1];
+  if (typeof hourGroup !== "string") {
+    throw new Error("Invalid birthTime: missing starting hour");
+  }
+  const hour: number = Number.parseInt(hourGroup, 10);
   if (Number.isNaN(hour) || hour < 0 || hour > 23) {
     throw new Error("Birth hour out of range (0-23)");
   }
