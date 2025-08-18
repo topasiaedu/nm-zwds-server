@@ -27,6 +27,7 @@ const CATEGORY_TO_FOLDER: Record<PdfCategory, string> = {
 export interface StorageUploadResult {
   readonly path: string;
   readonly url: string;
+  readonly downloadUrl: string;
 }
 
 /**
@@ -115,10 +116,13 @@ export async function uploadPdfToSupabase(
     // As a fallback, try to build a public URL (works only for public buckets)
     const publicUrl = client.storage.from(bucket).getPublicUrl(objectPath).data.publicUrl;
     logger.warn("Falling back to public URL for Supabase object", { path: objectPath, bucket });
-    return { path: objectPath, url: publicUrl };
+    const downloadUrl = `${publicUrl}${publicUrl.includes("?") ? "&" : "?"}download=${encodeURIComponent(params.filename)}`;
+    return { path: objectPath, url: publicUrl, downloadUrl };
   }
 
-  return { path: objectPath, url: signed.signedUrl };
+  const signedUrl: string = signed.signedUrl;
+  const downloadUrl = `${signedUrl}${signedUrl.includes("?") ? "&" : "?"}download=${encodeURIComponent(params.filename)}`;
+  return { path: objectPath, url: signedUrl, downloadUrl };
 }
 
 

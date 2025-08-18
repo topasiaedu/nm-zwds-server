@@ -54,13 +54,15 @@ function savePdfToFolder(buffer: Buffer, filename: string): string {
   return filePath;
 }
 
+// Note: We rely on Supabase signed URLs for downloads; no server-hosted download route is needed
+
 /**
  * POST /lifecycle-decoder
  * Generate and upload a lifecycle decoder PDF report
  */
 router.post("/lifecycle-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ url?: string }>>
+  res: Response<ApiResponse<{ url: string; supabaseUrl: string; downloadUrl: string }>>
 ): Promise<void> => {
   try {
     // Basic trust of input (validation removed per project simplification)
@@ -79,7 +81,7 @@ router.post("/lifecycle-decoder", asyncHandler(async (
     );
 
     // Save locally for dev visibility
-    savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+    const localPath = savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
     // Upload to Supabase and return the link
     const uploaded = await uploadPdfToSupabase({
@@ -96,12 +98,13 @@ router.post("/lifecycle-decoder", asyncHandler(async (
       email: validatedData.email,
       pdfSize: pdfResult.buffer.length,
       storagePath: uploaded.path,
+      localPath,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       message: `Lifecycle decoder report has been generated and uploaded`,
-      data: { url: uploaded.url },
+      data: { url: uploaded.url, supabaseUrl: uploaded.url, downloadUrl: uploaded.downloadUrl },
       timestamp: new Date().toISOString(),
     });
 
@@ -122,7 +125,7 @@ router.post("/lifecycle-decoder", asyncHandler(async (
  */
 router.post("/wealth-decoder", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ url?: string }>>
+  res: Response<ApiResponse<{ url: string; supabaseUrl: string; downloadUrl: string }>>
 ): Promise<void> => {
   try {
     const validatedData = req.body as LifecycleDecoderRequest;
@@ -140,7 +143,7 @@ router.post("/wealth-decoder", asyncHandler(async (
     );
 
     // Save locally for dev visibility
-    savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+    const localPath = savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
     // Upload to Supabase and return the link
     const uploaded = await uploadPdfToSupabase({
@@ -157,12 +160,13 @@ router.post("/wealth-decoder", asyncHandler(async (
       email: validatedData.email,
       pdfSize: pdfResult.buffer.length,
       storagePath: uploaded.path,
+      localPath,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       message: `Wealth decoder report has been generated and uploaded`,
-      data: { url: uploaded.url },
+      data: { url: uploaded.url, supabaseUrl: uploaded.url, downloadUrl: uploaded.downloadUrl },
       timestamp: new Date().toISOString(),
     });
 
@@ -183,7 +187,7 @@ router.post("/wealth-decoder", asyncHandler(async (
  */
 router.post("/career-timing-window", asyncHandler(async (
   req: TypedRequest<LifecycleDecoderRequest>, 
-  res: Response<ApiResponse<{ url?: string }>>
+  res: Response<ApiResponse<{ url: string; supabaseUrl: string; downloadUrl: string }>>
 ): Promise<void> => {
   try {
     const validatedData = req.body as LifecycleDecoderRequest;
@@ -201,7 +205,7 @@ router.post("/career-timing-window", asyncHandler(async (
     );
 
     // Save locally for dev visibility
-    savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+    const localPath = savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
     // Upload to Supabase and return the link
     const uploaded = await uploadPdfToSupabase({
@@ -218,12 +222,13 @@ router.post("/career-timing-window", asyncHandler(async (
       email: validatedData.email,
       pdfSize: pdfResult.buffer.length,
       storagePath: uploaded.path,
+      localPath,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       message: `Career timing window report has been generated and uploaded`,
-      data: { url: uploaded.url },
+      data: { url: uploaded.url, supabaseUrl: uploaded.url, downloadUrl: uploaded.downloadUrl },
       timestamp: new Date().toISOString(),
     });
 
@@ -261,7 +266,7 @@ router.post("/health", (_req: Request, res: Response<ApiResponse>): void => {
  */
 router.post("/test", asyncHandler(async (
   req: Request, 
-  res: Response<ApiResponse<{ url?: string }>>
+  res: Response<ApiResponse<{ url: string; supabaseUrl: string; downloadUrl: string }>>
 ): Promise<void> => {
   try {
     const { pdfType = "lifecycle-decoder" } = req.body;
@@ -306,7 +311,7 @@ router.post("/test", asyncHandler(async (
     }
 
     // Save locally for dev visibility
-    savePdfToFolder(pdfResult.buffer, pdfResult.filename);
+    const localPath = savePdfToFolder(pdfResult.buffer, pdfResult.filename);
 
     // Map type to category
     const category = pdfType === "wealth-decoder" ? "wealth" : pdfType === "career-timing-window" ? "career" : "lifecycle";
@@ -323,12 +328,13 @@ router.post("/test", asyncHandler(async (
       pdfType,
       pdfSize: pdfResult.buffer.length,
       storagePath: uploaded.path,
+      localPath,
     });
 
     res.status(HTTP_STATUS.OK).json({
       success: true,
       message: `Test ${pdfType} report has been generated and uploaded`,
-      data: { url: uploaded.url },
+      data: { url: uploaded.url, supabaseUrl: uploaded.url, downloadUrl: uploaded.downloadUrl },
       timestamp: new Date().toISOString(),
     });
 
