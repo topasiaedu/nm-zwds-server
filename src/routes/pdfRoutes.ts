@@ -10,6 +10,7 @@ import { pdfService } from "@/services/pdfService";
 import { uploadPdfToSupabase } from "@/services/storageService";
 import { logger } from "@/utils/logger";
 import { ApiResponse, HTTP_STATUS, TypedRequest, LifecycleDecoderRequest } from "@/types";
+import { normalizeBirthdayToISO } from "@/utils/date";
 import { config } from "@/config/environment";
 import fs from "fs";
 import path from "path";
@@ -82,9 +83,15 @@ router.post("/lifecycle-decoder", asyncHandler(async (
       requestId: (req as Request).headers["x-request-id"] || "unknown",
     });
 
+    // Normalize birthday if provided in non-ISO format (e.g., "May 14th 1999")
+    const normalized: LifecycleDecoderRequest = {
+      ...validatedData,
+      birthday: normalizeBirthdayToISO(validatedData.birthday),
+    };
+
     // Generate PDF with frontend URL for chart screenshot
     const pdfResult = await pdfService.generateLifecycleDecoderPdf(
-      validatedData,
+      normalized,
       config.FRONTEND_URL
     );
 
@@ -152,9 +159,15 @@ router.post("/wealth-decoder", asyncHandler(async (
       requestId: (req as Request).headers["x-request-id"] || "unknown",
     });
 
+    // Normalize birthday to ISO
+    const normalized: LifecycleDecoderRequest = {
+      ...validatedData,
+      birthday: normalizeBirthdayToISO(validatedData.birthday),
+    };
+
     // Generate PDF with frontend URL for chart screenshot
     const pdfResult = await pdfService.generateWealthDecoderPdf(
-      validatedData,
+      normalized,
       config.FRONTEND_URL
     );
 
@@ -221,9 +234,15 @@ router.post("/career-timing-window", asyncHandler(async (
       requestId: (req as Request).headers["x-request-id"] || "unknown",
     });
 
+    // Normalize birthday to ISO
+    const normalized: LifecycleDecoderRequest = {
+      ...validatedData,
+      birthday: normalizeBirthdayToISO(validatedData.birthday),
+    };
+
     // Generate PDF with frontend URL for chart screenshot
     const pdfResult = await pdfService.generateCareerTimingWindowPdf(
-      validatedData,
+      normalized,
       config.FRONTEND_URL
     );
 
