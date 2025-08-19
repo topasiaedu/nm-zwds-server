@@ -723,6 +723,21 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
     const daYunIndex = chart.palaces.findIndex(p => p.majorLimit && ageYears >= p.majorLimit.startAge && ageYears <= p.majorLimit.endAge);
     const startIdx = daYunIndex >= 0 ? daYunIndex : 0;
 
+    // Compute a global flag indicating whether the CURRENT Da Yun palace is in its later half
+    const currentDaYunPalace = chart.palaces[startIdx];
+    const isLaterHalfOfCurrentDaYun: boolean = (() => {
+      const ml = currentDaYunPalace?.majorLimit;
+      logger.info("DecadePages: major limit", {
+        name: this.data.name,
+        ageYears,
+        currentDaYunPalace,
+        ml,
+      });
+      if (!ml) return false;
+      const midpoint = Math.floor((ml.startAge + ml.endAge) / 2);
+      return ageYears > midpoint;
+    })();
+
     // Map palaces (12) into cycle labels, going clockwise from Da Yun index
     const palaceCycleLabels: string[] = [];
     for (let i = 0; i < 12; i++) {
@@ -746,6 +761,8 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       "大福": "health",
       "大父": "parents",
     };
+
+         // Use the global CURRENT Da Yun later-half flag for all palaces
 
     // For each palace by index 0..11
     chart.palaces.forEach((palace, idx) => {
@@ -779,18 +796,10 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       const sSupport = safeAvg(SUPPORT as unknown as Record<string, Record<string, number>>);
       const sVolatility = safeAvg(VOLATILITY as unknown as Record<string, Record<string, number>>);
 
-      // Determine if this palace is the CURRENT Da Yun ("大命") and whether the person is in the later 5 years
-      const isCurrentDaYun = idx === startIdx;
-      const isLaterHalf: boolean = (() => {
-        if (!isCurrentDaYun) return false;
-        const ml = palace?.majorLimit;
-        if (!ml) return false;
-        const midpoint = Math.floor((ml.startAge + ml.endAge) / 2);
-        return ageYears > midpoint;
-      })();
+ 
 
       // Select meaning table based on first vs later 5 years only for the current Da Yun; others default to early table
-      const meaningTable: Record<string, Partial<Record<string, string>>> = (isLaterHalf
+      const meaningTable: Record<string, Partial<Record<string, string>>> = (isLaterHalfOfCurrentDaYun
         ? (DECADE_CYCLE_MEANING_LATER_5_YEARS as unknown as Record<string, Partial<Record<string, string>>>)
         : (DECADE_CYCLE_MEANINGS as unknown as Record<string, Partial<Record<string, string>>>));
 
