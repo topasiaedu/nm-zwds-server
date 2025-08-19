@@ -5,7 +5,7 @@ import { logger } from "@/utils/logger";
 import { ZWDSCalculator } from "@/calculation/calculator";
 import { ChartData, Palace } from "@/calculation/types";
 import { PALACE_DESCRIPTIONS, PalaceKey, STAR_MEANINGS_BY_PALACE, STAR_META, StarKey, NEXT_STEPS_BY_PALACE } from "@/calculation/life-cycle-decoder/constants";
-import { DECADE_CYCLE_MEANINGS } from "@/calculation/life-cycle-decoder/decade_cycle_meaning";
+import { DECADE_CYCLE_MEANINGS, DECADE_CYCLE_MEANING_LATER_5_YEARS } from "@/calculation/life-cycle-decoder/decade_cycle_meaning";
 import { STRENGTH, OPPORTUNITY, INFLUENCE, SUPPORT, VOLATILITY } from "@/calculation/life-cycle-decoder/score";
 import { OPPOSITE_PALACE_INFLUENCE } from "@/calculation/constants";
 import { LifecycleDecoderRequest } from "@/types";
@@ -732,20 +732,6 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
     }
 
     // Utility mappers
-    const cycleEnMap: Record<string, string> = {
-      "大命": "DA MING",
-      "大兄": "DA XIONG",
-      "大夫": "DA FU",
-      "大子": "DA ZI",
-      "大财": "DA CAI",
-      "大疾": "DA JI",
-      "大迁": "DA QIAN",
-      "大友": "DA YOU",
-      "大官": "DA GUAN",
-      "大田": "DA TIAN",
-      "大福": "DA FU",
-      "大父": "DA FU",
-    };
     const cyclePalaceEnMap: Record<string, string> = {
       "大命": "life",
       "大兄": "siblings",
@@ -764,7 +750,6 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
     // For each palace by index 0..11
     chart.palaces.forEach((palace, idx) => {
       const cycle = (palaceCycleLabels[idx] || "大命") as string;
-      const cycleEn = cycleEnMap[cycle] || "DA MING";
       const palaceEn = cyclePalaceEnMap[cycle] || "life";
 
       // Gather stars in this palace (main + minor); fallback to opposite palace if none
@@ -794,6 +779,21 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
       const sSupport = safeAvg(SUPPORT as unknown as Record<string, Record<string, number>>);
       const sVolatility = safeAvg(VOLATILITY as unknown as Record<string, Record<string, number>>);
 
+      // Determine if this palace is the CURRENT Da Yun ("大命") and whether the person is in the later 5 years
+      const isCurrentDaYun = idx === startIdx;
+      const isLaterHalf: boolean = (() => {
+        if (!isCurrentDaYun) return false;
+        const ml = palace?.majorLimit;
+        if (!ml) return false;
+        const midpoint = Math.floor((ml.startAge + ml.endAge) / 2);
+        return ageYears > midpoint;
+      })();
+
+      // Select meaning table based on first vs later 5 years only for the current Da Yun; others default to early table
+      const meaningTable: Record<string, Partial<Record<string, string>>> = (isLaterHalf
+        ? (DECADE_CYCLE_MEANING_LATER_5_YEARS as unknown as Record<string, Partial<Record<string, string>>>)
+        : (DECADE_CYCLE_MEANINGS as unknown as Record<string, Partial<Record<string, string>>>));
+
       // Render header + bars page
       this.doc.addPage();
       this.currentPage++;
@@ -801,13 +801,11 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
 
       const pageWidth = this.doc.page.width; const pageHeight = this.doc.page.height; const margin = this.contentMargin;
 
-      // Header
+      // Header updated per feedback: show "INSIGHTS ON" and the Palace name (e.g., SIBLINGS)
       const headerTop = Math.round(pageHeight * 0.08);
-      this.doc.font(this.fontBoldName).fontSize(18).fillColor("#0b0f14").text("10 YEAR CYCLE", margin, headerTop);
-      // tighter spacing between lines
-      this.doc.font(this.fontBoldName).fontSize(42).fillColor("#d4af37").text(cycleEn, margin, this.doc.y + 2);
-      // Underlying palace label on left
-      this.doc.font(this.fontBoldName).fontSize(12).fillColor("#0b0f14").text(palaceEn.toUpperCase(), margin, this.doc.y + 4);
+      this.doc.font(this.fontBoldName).fontSize(18).fillColor("#0b0f14").text("INSIGHTS ON", margin, headerTop);
+      // Main heading uses the underlying palace name in uppercase
+      this.doc.font(this.fontBoldName).fontSize(42).fillColor("#d4af37").text(palaceEn.toUpperCase(), margin, this.doc.y + 2);
 
       // Palace icon (top-right)
       try {
@@ -862,7 +860,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
         const metaFirst = STAR_META[firstStar as unknown as StarKey];
         const titleFirst = metaFirst.name_en.toUpperCase();
         const subtitleFirst = (metaFirst.title || "").toUpperCase();
-        const meaningFirst = (DECADE_CYCLE_MEANINGS as Record<string, Partial<Record<string, string>>>)[cycle]?.[firstStar as unknown as string] || metaFirst.description;
+        const meaningFirst = meaningTable[cycle]?.[firstStar as unknown as string] || metaFirst.description;
         const iconFirst = path.join(__dirname, `../../assets/stars/${metaFirst.name_en.replace(/\s+/g, "")}\.png`);
 
         // Title   add more spacing from bars
@@ -898,7 +896,7 @@ export class LifecycleDecoderPdfGenerator extends BasePdfGenerator {
           const meta = STAR_META[sk];
           const title = meta.name_en.toUpperCase();
           const subtitle = (meta.title || "").toUpperCase();
-          const cycleBlock = (DECADE_CYCLE_MEANINGS as Record<string, Partial<Record<string, string>>>)[cycle] || {};
+          const cycleBlock = meaningTable[cycle] || {};
           const meaning = (cycleBlock as Record<string, string>)[sk as unknown as string] || meta.description;
           const iconPath = path.join(__dirname, `../../assets/stars/${meta.name_en.replace(/\s+/g, "")}\.png`);
 
